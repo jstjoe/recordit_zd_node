@@ -14,7 +14,7 @@ var ZendeskStrategy = require('passport-zendesk').Strategy;
 
 // configure express
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({ secret: 'hushhush', resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -126,7 +126,7 @@ app.get('/recordituri', function(req, res){
 
 // on recordit callback
 app.post('/recordit/completed', function(req, res) {
-  console.log(JSON.stringify(req.body));
+  console.log(req.body);
   // grab the details, fetch the GIF, upload it, and update the ticket
   var user = req.query.user,
     account = req.query.account,
