@@ -14,7 +14,7 @@ var ZendeskStrategy = require('passport-zendesk').Strategy;
 
 // configure express
 app.use(cookieParser());
-app.use(bodyParser.json());
+app.use(bodyParser.raw());
 app.use(session({ secret: 'hushhush', resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
