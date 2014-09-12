@@ -62,8 +62,8 @@ app.get('/recordituri', function(req, res){
     ticket_id = req.query.ticket;
     // check for user & account in DB, if found grab the token and then...
   var client = zendesk.createClient({
-    username:  'username',
-    token:     'oauth_token',
+    username:  'joe+it@zendesk.com',
+    token:     '6ad6642776b614c0d7aa76dd7aab4f0d3d44d4fa41fd1234c181380e43ebeaea',
     remoteUri: 'https://itjoe.zendesk.com/api/v2',
     oauth: true
   });
