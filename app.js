@@ -128,6 +128,8 @@ app.get('/recordituri', function(req, res){
 app.post('/recordit/completed', function(req, res) {
   console.log(req.body);
 
+  console.log(req.body.toString());
+
   // var data = req.body.replace('\\', '');
   // console.log(data);
   // grab the details, fetch the GIF, upload it, and update the ticket
