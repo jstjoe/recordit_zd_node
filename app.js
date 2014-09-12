@@ -102,8 +102,8 @@ app.get('/recordituri', function(req, res){
     encode : "gif",
     action_url : "http://requestb.in/1ct4lea1?inspect",
     callback : "http://pacific-wildwood-4341.herokuapp.com/recordit/completed", // add dynamic parameters (account, user, ticket)
-    start_message : "Record the problem please :)",
-    end_message : "Problem recorded!",
+    start_message : "Record the problem please",
+    end_message : "Problem recorded",
     width : 1280,
     height : 720
     // fps : fps,
@@ -147,7 +147,7 @@ app.post('/recordit/completed', function(req, res) {
 
   client.tickets.update(ticket_id, ticket,  function(err, req, result) {
     if (err) return handleError(err);
-    console.log(JSON.stringify(result, null, 2, true));
+    console.log(JSON.stringify(result.ticket.id));
     // successfully updated the ticket!
   });
 
