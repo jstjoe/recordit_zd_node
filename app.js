@@ -48,7 +48,7 @@ app.get('/login/callback', passport.authenticate('zendesk', { failureRedirect: '
   function(req, res) {
     // successful authentication
     // create user & account, store token
-    console.log(req.authInfo);
+    // console.log(req.authInfo);
 
     // redirect home
     res.redirect('/success');
@@ -59,7 +59,7 @@ app.get('/recordituri', function(req, res){
   // check 1. if account exists, 2. if user exists, 3. that user can auth into ticket
   var user = req.query.user,
     account = req.query.account,
-    ticket_id = req.query.ticket;
+    ticket_id = req.query.ticket_id;
     // check for user & account in DB, if found grab the token and then...
   var client = zendesk.createClient({
     username:  'joe+it@zendesk.com',
@@ -147,8 +147,9 @@ app.post('/recordit/completed', function(req, res) {
 
   client.tickets.update(ticket_id, ticket,  function(err, req, result) {
     if (err) return handleError(err);
-    console.log(JSON.stringify(result.ticket.id));
+    console.log("successfully updated the ticket!");
     // successfully updated the ticket!
+    res.send("all good");
   });
 
 
