@@ -16,6 +16,7 @@
     "passport": "^0.2.1",
     "passport-local": "^1.0.0",
     "passport-oauth2": "^1.1.2",
-    "passport-zendesk": "0.0.2"
+    "passport-zendesk": "0.0.2",
+    "recordit-url-builder": "1.0.x"
   }
 }
