@@ -128,6 +128,8 @@ app.get('/recordituri', function(req, res){
 app.post('/recordit/completed', function(req, res) {
   console.log(req.body);
   var body = JSON.stringify(req.body);
+  body = body.replace("u0026", "%26");
+  body = body.replace("\\", "");
   console.log(body);
 
   // var data = req.body.replace('\\', '');
