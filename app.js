@@ -93,7 +93,7 @@ app.get('/recordituri', function(req, res){
     fps : 12,
     encode : "gif",
     action_url : "http://requestb.in/1ct4lea1?inspect",
-    callback : "http://requestb.in/1ct4lea1", // add dynamic parameters (account, user, ticket)
+    callback : "http://pacific-wildwood-4341.herokuapp.com/recordit/completed", // add dynamic parameters (account, user, ticket)
     start_message : "Record the problem please :)",
     end_message : "Problem recorded!",
     width : 1280,
@@ -115,16 +115,16 @@ app.get('/recordituri', function(req, res){
 });
 
 // on recordit callback
-app.post('/completed', function(req, res) {
+app.post('/recordit/completed', function(req, res) {
   console.log(req);
   // grab the details, fetch the GIF, upload it, and update the ticket
   var user = req.query.user,
     account = req.query.account,
-    ticket_id = req.query.ticket;
+    ticket_id = req.query.ticket || '10';
 
   var client = zendesk.createClient({
-    username:  'username',
-    token:     'oauth_token',
+    username:  'joe+it@zendesk.com',
+    token:     '6ad6642776b614c0d7aa76dd7aab4f0d3d44d4fa41fd1234c181380e43ebeaea',
     remoteUri: 'https://itjoe.zendesk.com/api/v2',
     oauth: true
   });
@@ -133,7 +133,7 @@ app.post('/completed', function(req, res) {
   // client.attachments.upload(file, fileToken, cb);
 
   var ticket = {"ticket":{
-      "comment": { "body": "The smoke is very colorful."}
+      "comment": { "body": "The smoke is very colorful, and this shit works!"}
     }
   };
 
