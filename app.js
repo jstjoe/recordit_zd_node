@@ -7,7 +7,7 @@ var zendesk = require('node-zendesk'),
 var app = express();
 var passport = require('passport');
 var ZendeskStrategy = require('passport-zendesk').Strategy;
-require('recordit-url-builder');
+var urlBuilder = require('recordit-url-builder');
 
 // configure express
 app.use(cookieParser());
