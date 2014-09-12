@@ -10,6 +10,7 @@
   "license": "ISC",
   "private": true,
   "dependencies": {
+    "body-parser": "^1.8.1",
     "express": "^4.9.x",
     "neon": ">= 2.0.x",
     "node-zendesk": "0.0.15",
