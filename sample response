@@ -1,0 +1,8 @@
+sample response
+
+
+{"session":"{\"id\":66976,\"public_id\":\"5fsV575vhS\",\"user_id\":null,\"total_frames\":35,\"fps\":4.0,\"width\":973.0,\"height\":547.0,\"status\":\"not_encoded\",\"created_at\":\"2014-09-12T01:07:42Z\",\"updated_at\":\"2014-09-12T01:07:42Z\",\"gif_status\":\"\",\"is_from_retina\":true,\"app_version\":\"OSX-1.5.0.86\",\"is_enqueued\":true,\"ip\":\"73.162.35.55\",\"app_id\":\"IvEpfysIxrgzYuVF2ibxUP2e\",\"gif_size\":null,\"content_type\":\"image/png\",\"password\":null}","status":"ready","framesURL":"https://s3.amazonaws.com/img0.recordit.co/frames/5fsV575vhS.tar.gz?AWSAccessKeyId=AKIAJ6C24MUFYLHXOTTQ\u0026Expires=1410487677\u0026Signature=dYIu1mVQjPkieURjQAcvq2SPw08%3D","recorditURL":"http://recordit.co/5fsV575vhS","gifURL":"https://s3.amazonaws.com/img0.recordit.co/gifs/5fsV575vhS.gif?AWSAccessKeyId=AKIAJ6C24MUFYLHXOTTQ\u0026Expires=1410487677\u0026Signature=QTfn2qOflz9wZnBNKjRTAvXA0Bo%3D"}
+
+unescaped
+
+{"session":"{"id":66976,"public_id":"5fsV575vhS","user_id":null,"total_frames":35,"fps":4.0,"width":973.0,"height":547.0,"status":"not_encoded","created_at":"2014-09-12T01:07:42Z","updated_at":"2014-09-12T01:07:42Z","gif_status":"","is_from_retina":true,"app_version":"OSX-1.5.0.86","is_enqueued":true,"ip":"73.162.35.55","app_id":"IvEpfysIxrgzYuVF2ibxUP2e","gif_size":null,"content_type":"image/png","password":null}","status":"ready","framesURL":"https://s3.amazonaws.com/img0.recordit.co/frames/5fsV575vhS.tar.gz?AWSAccessKeyId=AKIAJ6C24MUFYLHXOTTQ&Expires=1410487677&Signature=dYIu1mVQjPkieURjQAcvq2SPw08%3D","recorditURL":"http://recordit.co/5fsV575vhS","gifURL":"https://s3.amazonaws.com/img0.recordit.co/gifs/5fsV575vhS.gif?AWSAccessKeyId=AKIAJ6C24MUFYLHXOTTQ&Expires=1410487677&Signature=QTfn2qOflz9wZnBNKjRTAvXA0Bo%3D"}
