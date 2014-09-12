@@ -4,10 +4,12 @@ var session = require('express-session');
 var zendesk = require('node-zendesk'),
     fs      = require('fs');
 
+require('recordit-url-builder');
+
+
 var app = express();
 var passport = require('passport');
 var ZendeskStrategy = require('passport-zendesk').Strategy;
-var urlBuilder = require('recordit-url-builder');
 
 // configure express
 app.use(cookieParser());
@@ -31,6 +33,12 @@ passport.serializeUser(function(user, done) {
 });
 passport.deserializeUser(function(user, done) {
   done(null, user);
+});
+
+// configure recordit url builder
+var urlBuilder = new Recordit.URLBuilder({
+    clientID : "550769da0787b8fe768d084801bac17399913a8b",
+    secret : "b276bc51c25b26d411170cf8508e83fcdfaa572f"
 });
 
 // ROUTES
