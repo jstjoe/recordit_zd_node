@@ -1,6 +1,8 @@
 var express = require('express');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
+var zendesk = require('node-zendesk'),
+    fs      = require('fs');
 
 var app = express();
 var passport = require('passport');
@@ -49,11 +51,34 @@ app.get('/recordituri', function(req, res){
   // check 1. if account exists, 2. if user exists, 3. that user can auth into ticket
   var user = req.query.user,
     account = req.query.account,
-    ticket = req.query.ticket;
-
-    // if not -> send them to /login
+    ticket_id = req.query.ticket;
+    // check for user & account in DB, if found grab the token and then...
+  var client = zendesk.createClient({
+    username:  'username',
+    token:     'oauth_token',
+    remoteUri: 'https://itjoe.zendesk.com/api/v2',
+    oauth: true
+  });
+    // check that the user is authenticated
+  client.users.auth(function (err, req, result) {
+    if (err) {
+      console.log(err);
+      res.redirect('/login');
+      return;
+    }
+    // console.log(JSON.stringify(result.verified, null, 2, true));
 
     // if so -> continue to create and return URI
+    console.log('User authenticated into Zendesk');
+
+
+
+
+  });
+    
+
+    
+
   // parse query string parameters into variables
   var fps = req.query.fps,
     encode = req.query.encode,
@@ -68,7 +93,7 @@ app.get('/recordituri', function(req, res){
     fps : 12,
     encode : "gif",
     action_url : "http://requestb.in/1ct4lea1?inspect",
-    callback : "http://requestb.in/1ct4lea1",
+    callback : "http://requestb.in/1ct4lea1", // add dynamic parameters (account, user, ticket)
     start_message : "Record the problem please :)",
     end_message : "Problem recorded!",
     width : 1280,
@@ -92,12 +117,43 @@ app.get('/recordituri', function(req, res){
 // on recordit callback
 app.post('/completed', function(req, res) {
   console.log(req);
-  // grab the details, fetch the GIF, update the ticket
+  // grab the details, fetch the GIF, upload it, and update the ticket
+  var user = req.query.user,
+    account = req.query.account,
+    ticket_id = req.query.ticket;
+
+  var client = zendesk.createClient({
+    username:  'username',
+    token:     'oauth_token',
+    remoteUri: 'https://itjoe.zendesk.com/api/v2',
+    oauth: true
+  });
+
+  // TODO: upload the file, grab the uploads token
+  // client.attachments.upload(file, fileToken, cb);
+
+  var ticket = {"ticket":{
+      "comment": { "body": "The smoke is very colorful."}
+    }
+  };
+
+  client.tickets.update(ticket_id, ticket,  function(err, req, result) {
+    if (err) return handleError(err);
+    console.log(JSON.stringify(result, null, 2, true));
+    // successfully updated the ticket!
+  });
 
 
 
 });
 
 
+// named functions
+function handleError(err) {
+    console.log(err);
+    process.exit(-1);
+}
+
 // START
 app.listen(3000);
+
