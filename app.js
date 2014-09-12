@@ -127,8 +127,8 @@ app.get('/recordituri', function(req, res){
 // on recordit callback
 app.post('/recordit/completed', function(req, res) {
   console.log(req.body);
-
-  console.log( JSON.parse(req.body) );
+  var body = JSON.parse(req.body);
+  console.log(body);
 
   // var data = req.body.replace('\\', '');
   // console.log(data);
