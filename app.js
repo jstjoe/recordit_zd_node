@@ -126,7 +126,10 @@ app.get('/recordituri', function(req, res){
 
 // on recordit callback
 app.post('/recordit/completed', function(req, res) {
-  console.log(req.body);
+  console.log(req.body.session);
+
+  var data = req.body.replace('\\', '');
+  console.log(data);
   // grab the details, fetch the GIF, upload it, and update the ticket
   var user = req.query.user,
     account = req.query.account,
