@@ -70,7 +70,7 @@ app.get('/recordituri', function(req, res){
     oauth: true
   });
     // check that the user is authenticated
-  client.users.auth(function (err, req, result) {
+  client.users.auth(function (err, authRequest, result) {
     if (err) {
       console.log(err);
       // TODO: send the correct response code?
