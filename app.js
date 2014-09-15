@@ -61,6 +61,8 @@ app.get('/recordituri', function(req, res){
     account = req.query.account,
     ticket_id = req.query.ticket_id;
     // check for user & account in DB, if found grab the token and then...
+
+
   var client = zendesk.createClient({
     username:  'joe+it@zendesk.com',
     token:     '6ad6642776b614c0d7aa76dd7aab4f0d3d44d4fa41fd1234c181380e43ebeaea',
@@ -98,7 +100,7 @@ app.get('/recordituri', function(req, res){
   var uri = urlBuilder.generate({
     fps : 12,
     encode : "gif",
-    action_url : action_url || null,
+    action_url : action_url,
     callback : "http://zen-recordit.herokuapp.com/recordit/completed?ticket_id=" + ticket_id, // add dynamic parameters (account, user, ticket)
     start_message : "Record the problem please",
     end_message : "Problem recorded, updating ticket...",
