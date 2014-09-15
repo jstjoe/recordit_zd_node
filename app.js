@@ -170,7 +170,7 @@ app.post('/recordit/completed', function(req, res) {
       "agent_id": 304417309
     };
     var options = {
-      uri: 'https://itjoe.zendesk.com/api/v2/apps/notifications.json',
+      uri: 'https://itjoe.zendesk.com/api/v2/apps/notify.json',
       method: 'POST',
       json: notification
     };
@@ -184,6 +184,10 @@ app.post('/recordit/completed', function(req, res) {
 
 
 
+  } else {
+    // status is not ready
+    res.send("all good");
+    console.dir(req.body);
   }
   
 });
