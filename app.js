@@ -126,8 +126,9 @@ app.post('/recordit/completed', function(req, res) {
   console.log("Raw data");
   console.log(req.body);
   console.log(typeof req.body);
+  console.dir(req.body);
 
-  console.log(req.body[0]);
+  console.log(req.body[""]);
 
 
   var body_string = JSON.stringify(req.body);
