@@ -123,62 +123,57 @@ app.get('/recordituri', function(req, res){
 // on recordit callback
 app.post('/recordit/completed', function(req, res) {
   // if the status is 'ready'
-  console.log("Raw data");
-  console.log(req.body);
-  console.log(typeof req.body);
-  console.dir(req.body);
 
-  console.log(req.body.status);
-  console.log(req.body.gifURL);
+  if(req.body.status == 'ready') {
+
+    console.log("Raw data");
+    console.dir(req.body);
+
+    // grab the details, fetch the GIF, upload it, and update the ticket
+    var user = req.query.user,
+      account = req.query.account,
+      ticket_id = req.query.ticket_id || '10';
+
+    var client = zendesk.createClient({
+      username:  user,
+      token:     '6ad6642776b614c0d7aa76dd7aab4f0d3d44d4fa41fd1234c181380e43ebeaea',
+      remoteUri: 'https://itjoe.zendesk.com/api/v2',
+      oauth: true
+    });
+
+    // TODO: upload the file, grab the uploads token
+    client.attachments.upload(req.body.gifURL, null, function(err, req, result) {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      console.dir(result[0]);
+    });
+
+    client.requestUpload(req.body.gifURL, null, function(err, req, result) {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      console.dir(result[0]);
+    });
+
+    var ticket = {"ticket":{
+        "comment": { "body": "The smoke is very colorful, and this shit works!"}
+      }
+    };
+
+    client.tickets.update(ticket_id, ticket,  function(err, req, result) {
+      if (err) return handleError(err);
+      console.log("successfully updated the ticket!");
+      // successfully updated the ticket!
+      res.send("all good");
+    });
 
 
-  // var body_string = JSON.stringify(req.body);
-  // console.log("Stringified");
-  // console.log(body_string);
-  // console.log(typeof body_string);
-  // body_string = body_string.replace("AWSAccessKeyId\":\"", "AWSAccessKeyId=");
-  // body_string = body_string.replace(/^\{"/g, "");
-  // body_string = body_string.replace(/"\}$/g, "");
 
-
-  // console.log("Replaced");
-  // console.log(body_string);
-  // console.log(typeof body_string);
-
-  // var body_JSON = JSON.parse(body_string);
-  // console.log("Turned back to JSON - status");
-  // console.log(body_JSON.status);
-  // console.log(typeof body_JSON);
-
-  // grab the details, fetch the GIF, upload it, and update the ticket
-  var user = req.query.user,
-    account = req.query.account,
-    ticket_id = req.query.ticket_id || '10';
-
-  var client = zendesk.createClient({
-    username:  user,
-    token:     '6ad6642776b614c0d7aa76dd7aab4f0d3d44d4fa41fd1234c181380e43ebeaea',
-    remoteUri: 'https://itjoe.zendesk.com/api/v2',
-    oauth: true
-  });
-
-  // TODO: upload the file, grab the uploads token
-  client.attachments.upload(req.body.gifURL, null, function(err, req, result) {
-    console.dir(result[0]);
-  });
-
-  var ticket = {"ticket":{
-      "comment": { "body": "The smoke is very colorful, and this shit works!"}
-    }
-  };
-
-  client.tickets.update(ticket_id, ticket,  function(err, req, result) {
-    if (err) return handleError(err);
-    console.log("successfully updated the ticket!");
-    // successfully updated the ticket!
-    res.send("all good");
-  });
-
+  }
+  
 
 
 });
