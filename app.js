@@ -105,11 +105,11 @@ app.get('/recordituri', function(req, res){
     // build the URI
     uri = urlBuilder.generate({
       fps : 12,
-      encode : "gif",
+      encode : "all",
       callback : "http://zen-recordit.herokuapp.com/recordit/completed?ticket_id=" + ticket_id + "&role=agent", // add dynamic parameters (account, user, ticket)
       start_message : "Record the problem please",
       end_message : "Problem recorded, updating ticket...",
-      action_url : "https://" + account + ".zendesk.com/agent/#/tickets/" + ticket_id
+      // action_url : "https://" + account + ".zendesk.com/agent/#/tickets/" + ticket_id
       // width : width,
       // height : height
     });
