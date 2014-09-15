@@ -100,12 +100,10 @@ app.get('/recordituri', function(req, res){
   var uri = urlBuilder.generate({
     fps : 12,
     encode : "gif",
-    // action_url : "http://requestb.in/1ct4lea1?inspect",
+    action_url : helpers.fmt("https://%@.zendesk.com/tickets/%@", account, ticket_id),
     callback : "http://zen-recordit.herokuapp.com/recordit/completed?ticket_id=" + ticket_id, // add dynamic parameters (account, user, ticket)
     start_message : "Record the problem please",
-    end_message : "Problem recorded",
-    width : 1280,
-    height : 720
+    end_message : "Problem recorded, updating ticket...",
     // fps : fps,
     // encode : encode,
     // action_url : action_url,
@@ -136,25 +134,20 @@ app.post('/recordit/completed', function(req, res) {
   console.log("Stringified");
   console.log(body_string);
   console.log(typeof body_string);
-  // body_string = body_string.replace(/u0026/g, "%26");
-  // body_string = body_string.replace(/\\/g, "");
   body_string = body_string.replace("AWSAccessKeyId\":\"", "AWSAccessKeyId=");
   body_string = body_string.replace(/^\{"/g, "");
-  body_string = body_string.replace(/"\}$/g, ""); // \"
-
-  body_string = body_string.replace(/\\\\\\"/g, "\\'").replace(/\\"/g, "\"");
+  body_string = body_string.replace(/"\}$/g, "");
 
 
   console.log("Replaced");
   console.log(body_string);
   console.log(typeof body_string);
 
-  var body_JSON = JSON.parse(body_string);
-  console.log("Turned back to JSON 2 - status");
-  console.log(body_JSON.status);
+  // var body_JSON = JSON.parse(body_string);
+  // console.log("Turned back to JSON - status");
+  // console.log(body_JSON.status);
+  // console.log(typeof body_JSON);
 
-  // var data = req.body.replace('\\', '');
-  // console.log(data);
   // grab the details, fetch the GIF, upload it, and update the ticket
   var user = req.query.user,
     account = req.query.account,
