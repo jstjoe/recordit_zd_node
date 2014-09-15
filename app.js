@@ -140,7 +140,11 @@ app.post('/recordit/completed', function(req, res) {
   // body_string = body_string.replace(/\\/g, "");
   body_string = body_string.replace("AWSAccessKeyId\":\"", "AWSAccessKeyId=");
   body_string = body_string.replace(/^\{"/g, "");
-  body_string = body_string.replace(/"\}$/g, "");
+  body_string = body_string.replace(/"\}$/g, ""); // \"
+
+  body_string = body_string.replace(/\\"/g, "");
+  body_string = body_string.replace(/\\\\\\"/g, "");
+
   console.log("Replaced");
   console.log(body_string);
   console.log(typeof body_string);
