@@ -152,12 +152,12 @@ app.post('/recordit/completed', function(req, res) {
       }
     };
     // IF it is an end-user -> update the ticket with the screenshot
-    client.tickets.update(ticket_id, ticket,  function(err, req, result) {
-      if (err) return handleError(err);
-      console.log("successfully updated the ticket!");
-      // successfully updated the ticket!
-      res.send("all good");
-    });
+    // client.tickets.update(ticket_id, ticket,  function(err, req, result) {
+    //   if (err) return handleError(err);
+    //   console.log("successfully updated the ticket!");
+    //   // successfully updated the ticket!
+    //   res.send("all good");
+    // });
 
     // ELSE if it is an agent -> send them the screenshot via app notifications
     var notification = {
@@ -181,8 +181,6 @@ app.post('/recordit/completed', function(req, res) {
       res.send("all good");
       console.log('POST to notifications successful!  Server responded with:', body);
     });
-
-
 
   } else {
     // status is not ready
