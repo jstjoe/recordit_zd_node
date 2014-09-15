@@ -4,10 +4,8 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var zendesk = require('node-zendesk'),
     fs      = require('fs');
-
+var request = require('request');
 require('recordit-url-builder');
-
-
 var app = express();
 var passport = require('passport');
 var ZendeskStrategy = require('passport-zendesk').Strategy;
@@ -150,7 +148,7 @@ app.post('/recordit/completed', function(req, res) {
       console.dir(result[0]);
     });
 
-    client.requestUpload(req.body.gifURL, null, function(err, req, result) {
+    client.requestUpload(req.body.gifURL, null, null, function(err, req, result) {
       if (err) {
         console.log(err);
         return;
@@ -163,6 +161,8 @@ app.post('/recordit/completed', function(req, res) {
       }
     };
 
+
+    // IF it is an end-user -> update the ticket with the screenshot
     client.tickets.update(ticket_id, ticket,  function(err, req, result) {
       if (err) return handleError(err);
       console.log("successfully updated the ticket!");
@@ -170,12 +170,33 @@ app.post('/recordit/completed', function(req, res) {
       res.send("all good");
     });
 
+    // ELSE if it is an agent -> send them the screenshot via app notifications
+    var notification = {
+      "app_id": 0,
+      "event": "screencastDone",
+      "body": {
+        "gifURL":"",
+        "videoURL":""
+      },
+      "agent_id": 304417309
+    };
+    var options = {
+      uri: 'https://itjoe.zendesk.com/api/v2/apps/notifications.json',
+      method: 'POST',
+      json: notification
+    };
+    request.post(options, function optionalCallback (err, httpResponse, body) {
+      if (err) {
+        return console.error('Upload failed:', err);
+      }
+      res.send("all good");
+      console.log('POST to notifications successful!  Server responded with:', body);
+    });
+
 
 
   }
   
-
-
 });
 
 
