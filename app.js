@@ -147,21 +147,10 @@ app.post('/recordit/completed', function(req, res) {
       }
       console.dir(result[0]);
     });
-
-    client.requestUpload(req.body.gifURL, null, null, function(err, req, result) {
-      if (err) {
-        console.log(err);
-        return;
-      }
-      console.dir(result[0]);
-    });
-
     var ticket = {"ticket":{
         "comment": { "body": "The smoke is very colorful, and this shit works!"}
       }
     };
-
-
     // IF it is an end-user -> update the ticket with the screenshot
     client.tickets.update(ticket_id, ticket,  function(err, req, result) {
       if (err) return handleError(err);
