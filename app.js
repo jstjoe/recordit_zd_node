@@ -129,6 +129,8 @@ app.post('/recordit/completed', function(req, res) {
   console.log(req.body);
   console.log(typeof req.body);
 
+  console.log(req.body[0]);
+
 
   var body_string = JSON.stringify(req.body);
   console.log("Stringified");
