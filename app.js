@@ -163,7 +163,9 @@ app.post('/recordit/completed', function(req, res) {
   });
 
   // TODO: upload the file, grab the uploads token
-  // client.attachments.upload(file, fileToken, cb);
+  client.attachments.upload(req.body.gifURL, null, function(err, req, result) {
+    console.dir(result[0]);
+  });
 
   var ticket = {"ticket":{
       "comment": { "body": "The smoke is very colorful, and this shit works!"}
