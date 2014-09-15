@@ -142,7 +142,7 @@ app.post('/recordit/completed', function(req, res) {
   body_string = body_string.replace(/^\{"/g, "");
   body_string = body_string.replace(/"\}$/g, ""); // \"
 
-  body_string = body_string.replace(/\\\\\\"/g, "\"");
+  body_string = body_string.replace(/\\\\\\"/g, "\\\"");
   body_string = body_string.replace(/\\"/g, "\"");
 
 
