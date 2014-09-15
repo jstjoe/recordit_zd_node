@@ -87,8 +87,6 @@ app.get('/recordituri', function(req, res){
   });
     
 
-    
-
   // parse query string parameters into variables
   var fps = req.query.fps,
     encode = req.query.encode,
@@ -103,7 +101,7 @@ app.get('/recordituri', function(req, res){
     fps : 12,
     encode : "gif",
     // action_url : "http://requestb.in/1ct4lea1?inspect",
-    callback : "http://zen-recordit.herokuapp.com/recordit/completed", // add dynamic parameters (account, user, ticket)
+    callback : "http://zen-recordit.herokuapp.com/recordit/completed?ticket_id=" + ticket_id, // add dynamic parameters (account, user, ticket)
     start_message : "Record the problem please",
     end_message : "Problem recorded",
     width : 1280,
