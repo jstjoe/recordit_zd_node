@@ -126,21 +126,26 @@ app.get('/recordituri', function(req, res){
 
 // on recordit callback
 app.post('/recordit/completed', function(req, res) {
-  // console.log(req.body);
-  var body = JSON.stringify(req.body);
-  body = body.replace(/u0026/g, "%26");
-  body = body.replace(/\\/g, "");
-  console.log(body);
+  console.log("Raw data");
+  console.log(req.body);
+  var body_string = JSON.stringify(req.body);
+  body_string = body_string.replace(/u0026/g, "%26");
+  body_string = body_string.replace(/\\/g, "");
+  console.log("Manually made into a string with replace");
+  console.log(body_string);
+  var body_JSON = JSON.stringify(body_string);
+  console.log("Turned back to JSON");
+  console.log(body_JSON);
 
   // var data = req.body.replace('\\', '');
   // console.log(data);
   // grab the details, fetch the GIF, upload it, and update the ticket
   var user = req.query.user,
     account = req.query.account,
-    ticket_id = req.query.ticket || '10';
+    ticket_id = req.query.ticket_id || '10';
 
   var client = zendesk.createClient({
-    username:  'joe+it@zendesk.com',
+    username:  user,
     token:     '6ad6642776b614c0d7aa76dd7aab4f0d3d44d4fa41fd1234c181380e43ebeaea',
     remoteUri: 'https://itjoe.zendesk.com/api/v2',
     oauth: true
