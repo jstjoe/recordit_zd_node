@@ -92,19 +92,17 @@ app.get('/recordituri', function(req, res){
         fps : 12,
         encode : "all",
         callback : "http://zen-recordit.herokuapp.com/recordit/completed?ticket_id=" + ticket_id + "&role=agent", // add dynamic parameters (account, user, ticket)
-        // start_message : "Record please",
-        // end_message : "Problem recorded, sending to Zendesk",
-        // action_url : "https://" + account + ".zendesk.com/agent/#/tickets/" + ticket_id
-        // width : width,
-        // height : height
+        start_message : "Let's get it started",
+        end_message : "Sending to Zendesk, recording should be available shortly"
       });
     } else {
       uri = urlBuilder.generate({
         fps : 12,
-        encode : "gif",
+        encode : "all",
         callback : "http://zen-recordit.herokuapp.com/recordit/completed?ticket_id=" + ticket_id, // add dynamic parameters (account, user, ticket)
-        start_message : "Record the problem please",
-        end_message : "Problem recorded, sending to Zendesk",
+        start_message : "Please record the problem",
+        end_message : "Sending to Zendesk, recording should be available shortly"
+        // action_url : "https://" + account + ".zendesk.com/agent/#/tickets/" + ticket_id
         // fps : fps,
         // encode : encode,
         // action_url : action_url,
@@ -124,19 +122,7 @@ app.get('/recordituri', function(req, res){
 
 
   });
-    
 
-  // parse query string parameters into variables
-  // var fps = req.query.fps,
-  //   encode = req.query.encode,
-  //   action_url = req.query.action_url,
-  //   callback = req.query.callback,
-  //   start_message = req.query.start_message,
-  //   end_message = req.query.end_message,
-  //   width = req.query.width,
-  //   height = req.query.height;
-
-  
 });
 
 // on recordit callback
