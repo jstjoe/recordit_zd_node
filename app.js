@@ -183,8 +183,9 @@ app.post('/recordit/completed', function(req, res) {
       "app_id": 0,
       "event": "screencastDone",
       "body": {
-        "gifURL":req.body.gifURL,
-        "recorditURL":req.body.recorditURL
+        "ticketID": ticket_id,
+        "gifURL": req.body.gifURL,
+        "recorditURL": req.body.recorditURL
       },
       "agent_id": 304417309
     };
