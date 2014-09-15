@@ -46,7 +46,7 @@ var urlBuilder = new Recordit.URLBuilder({
 // ROUTES
 app.get('/login', passport.authenticate('zendesk'));  // , { subdomain: subdomain }
 
-app.get('/login/callback', passport.authenticate('zendesk', { failureRedirect: '/login', subdomain: 'itjoe' }),
+app.get('/login/callback', passport.authenticate('zendesk', { failureRedirect: '/login' }),
   function(req, res) {
     // successful authentication
     // create user & account, store token
@@ -102,8 +102,8 @@ app.get('/recordituri', function(req, res){
   var uri = urlBuilder.generate({
     fps : 12,
     encode : "gif",
-    action_url : "http://requestb.in/1ct4lea1?inspect",
-    callback : "http://pacific-wildwood-4341.herokuapp.com/recordit/completed", // add dynamic parameters (account, user, ticket)
+    // action_url : "http://requestb.in/1ct4lea1?inspect",
+    callback : "http://zen-recordit.herokuapp.com/recordit/completed", // add dynamic parameters (account, user, ticket)
     start_message : "Record the problem please",
     end_message : "Problem recorded",
     width : 1280,
@@ -126,7 +126,7 @@ app.get('/recordituri', function(req, res){
 
 // on recordit callback
 app.post('/recordit/completed', function(req, res) {
-  console.log(req.body);
+  // console.log(req.body);
   var body = JSON.stringify(req.body);
   body = body.replace(/u0026/g, "%26");
   body = body.replace(/\\/g, "");
