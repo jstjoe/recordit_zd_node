@@ -124,6 +124,8 @@ app.get('/recordituri', function(req, res){
 
 // on recordit callback
 app.post('/recordit/completed', function(req, res) {
+  debugger;
+  // if the status is 'ready'
   console.log("Raw data");
   console.log(req.body);
 
