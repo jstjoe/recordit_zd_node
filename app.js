@@ -140,18 +140,19 @@ app.post('/recordit/completed', function(req, res) {
     });
 
     // TODO: upload the file, grab the uploads token
-    client.attachments.upload(req.body.gifURL, null, function(err, req, result) {
-      if (err) {
-        console.log(err);
-        return;
-      }
-      console.dir(result[0]);
-    });
-    var ticket = {"ticket":{
-        "comment": { "body": "The smoke is very colorful, and this shit works!"}
-      }
-    };
+    // client.attachments.upload(req.body.gifURL, null, function(err, req, result) {
+    //   if (err) {
+    //     console.log(err);
+    //     return;
+    //   }
+    //   console.dir(result[0]);
+    // });
+    
     // IF it is an end-user -> update the ticket with the screenshot
+    // var ticket = {"ticket":{
+    //     "comment": { "body": "The smoke is very colorful, and this shit works!"}
+    //   }
+    // };
     // client.tickets.update(ticket_id, ticket,  function(err, req, result) {
     //   if (err) return handleError(err);
     //   console.log("successfully updated the ticket!");
