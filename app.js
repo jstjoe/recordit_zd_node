@@ -88,30 +88,49 @@ app.get('/recordituri', function(req, res){
     
 
   // parse query string parameters into variables
-  var fps = req.query.fps,
-    encode = req.query.encode,
-    action_url = req.query.action_url,
-    callback = req.query.callback,
-    start_message = req.query.start_message,
-    end_message = req.query.end_message,
-    width = req.query.width,
-    height = req.query.height;
-  // build the URI
-  var uri = urlBuilder.generate({
-    fps : 12,
-    encode : "gif",
-    callback : "http://zen-recordit.herokuapp.com/recordit/completed?ticket_id=" + ticket_id, // add dynamic parameters (account, user, ticket)
-    start_message : "Record the problem please",
-    end_message : "Problem recorded, updating ticket...",
-    // fps : fps,
-    // encode : encode,
-    // action_url : action_url,
-    // callback : callback,
-    // start_message : start_message,
-    // end_message : end_message,
-    // width : width,
-    // height : height
-  });
+  // var fps = req.query.fps,
+  //   encode = req.query.encode,
+  //   action_url = req.query.action_url,
+  //   callback = req.query.callback,
+  //   start_message = req.query.start_message,
+  //   end_message = req.query.end_message,
+  //   width = req.query.width,
+  //   height = req.query.height;
+
+  var role = req.query.role,
+    user_id = req.query.user_id,
+    uri;
+
+  if (role == 'agent') {
+    // build the URI
+    uri = urlBuilder.generate({
+      fps : 12,
+      encode : "gif",
+      callback : "http://zen-recordit.herokuapp.com/recordit/completed?ticket_id=" + ticket_id + "&role=agent", // add dynamic parameters (account, user, ticket)
+      start_message : "Record the problem please",
+      end_message : "Problem recorded, updating ticket...",
+      action_url : "https://" + account + ".zendesk.com/agent/#/tickets/" + ticket_id
+      // width : width,
+      // height : height
+    });
+  } else {
+    uri = urlBuilder.generate({
+      fps : 12,
+      encode : "gif",
+      callback : "http://zen-recordit.herokuapp.com/recordit/completed?ticket_id=" + ticket_id, // add dynamic parameters (account, user, ticket)
+      start_message : "Record the problem please",
+      end_message : "Problem recorded, updating ticket...",
+      // fps : fps,
+      // encode : encode,
+      // action_url : action_url,
+      // callback : callback,
+      // start_message : start_message,
+      // end_message : end_message,
+      // width : width,
+      // height : height
+    });
+  }
+  
   // respond w/ URI
   var response = {
     uri: uri
@@ -159,7 +178,7 @@ app.post('/recordit/completed', function(req, res) {
     //   res.send("all good");
     // });
 
-    // ELSE if it is an agent -> send them the screenshot via app notifications
+    // ELSE if role is agent -> send them the screenshot via app notifications
     var notification = {
       "app_id": 0,
       "event": "screencastDone",
