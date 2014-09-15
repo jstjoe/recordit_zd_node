@@ -73,15 +73,54 @@ app.get('/recordituri', function(req, res){
   client.users.auth(function (err, req, result) {
     if (err) {
       console.log(err);
+      // TODO: send the correct response code?
       res.redirect('/login');
       return;
     }
-    // console.log(JSON.stringify(result.verified, null, 2, true));
+    // console.log(JSON.stringify(result.verified));
 
     // if so -> continue to create and return URI
     console.log('User authenticated into Zendesk');
 
+    var role = req.query.role,
+      user_id = req.query.user_id,
+      uri;
 
+    if (role == 'agent') {
+      // build the URI
+      uri = urlBuilder.generate({
+        fps : 12,
+        encode : "all",
+        callback : "http://zen-recordit.herokuapp.com/recordit/completed?ticket_id=" + ticket_id + "&role=agent", // add dynamic parameters (account, user, ticket)
+        // start_message : "Record please",
+        // end_message : "Problem recorded, sending to Zendesk",
+        // action_url : "https://" + account + ".zendesk.com/agent/#/tickets/" + ticket_id
+        // width : width,
+        // height : height
+      });
+    } else {
+      uri = urlBuilder.generate({
+        fps : 12,
+        encode : "gif",
+        callback : "http://zen-recordit.herokuapp.com/recordit/completed?ticket_id=" + ticket_id, // add dynamic parameters (account, user, ticket)
+        start_message : "Record the problem please",
+        end_message : "Problem recorded, sending to Zendesk",
+        // fps : fps,
+        // encode : encode,
+        // action_url : action_url,
+        // callback : callback,
+        // start_message : start_message,
+        // end_message : end_message,
+        // width : width,
+        // height : height
+      });
+    }
+    
+    // respond w/ URI
+    var response = {
+      uri: uri
+    };
+    res.send(response);
 
 
   });
@@ -97,45 +136,7 @@ app.get('/recordituri', function(req, res){
   //   width = req.query.width,
   //   height = req.query.height;
 
-  var role = req.query.role,
-    user_id = req.query.user_id,
-    uri;
-
-  if (role == 'agent') {
-    // build the URI
-    uri = urlBuilder.generate({
-      fps : 12,
-      encode : "all",
-      callback : "http://zen-recordit.herokuapp.com/recordit/completed?ticket_id=" + ticket_id + "&role=agent", // add dynamic parameters (account, user, ticket)
-      start_message : "Record the problem please",
-      end_message : "Problem recorded, updating ticket...",
-      // action_url : "https://" + account + ".zendesk.com/agent/#/tickets/" + ticket_id
-      // width : width,
-      // height : height
-    });
-  } else {
-    uri = urlBuilder.generate({
-      fps : 12,
-      encode : "gif",
-      callback : "http://zen-recordit.herokuapp.com/recordit/completed?ticket_id=" + ticket_id, // add dynamic parameters (account, user, ticket)
-      start_message : "Record the problem please",
-      end_message : "Problem recorded, updating ticket...",
-      // fps : fps,
-      // encode : encode,
-      // action_url : action_url,
-      // callback : callback,
-      // start_message : start_message,
-      // end_message : end_message,
-      // width : width,
-      // height : height
-    });
-  }
   
-  // respond w/ URI
-  var response = {
-    uri: uri
-  };
-  res.send(response);
 });
 
 // on recordit callback
