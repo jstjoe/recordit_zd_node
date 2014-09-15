@@ -135,7 +135,7 @@ app.post('/recordit/completed', function(req, res) {
   console.log(body_string);
   var body_JSON = JSON.stringify(body_string);
   console.log("Turned back to JSON");
-  console.log(body_JSON);
+  console.log(body_JSON.status);
 
   // var data = req.body.replace('\\', '');
   // console.log(data);
