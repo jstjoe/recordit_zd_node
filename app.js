@@ -124,25 +124,21 @@ app.get('/recordituri', function(req, res){
 
 // on recordit callback
 app.post('/recordit/completed', function(req, res) {
-  debugger;
   // if the status is 'ready'
   console.log("Raw data");
   console.log(req.body);
 
 
-  var body = req.body.replace("AWSAccessKeyId': '", "AWSAccessKeyId=");
-  console.log("Replaced");
-  console.log(body);
-  var body_JSON_1 = JSON.stringify(body);
-  console.log("Turned back to JSON 1 - status");
-  console.log(body_JSON_1.status);
-
   var body_string = JSON.stringify(req.body);
-  // body_string = body_string.replace(/u0026/g, "%26");
-  // body_string = body_string.replace(/\\/g, "");
   console.log("Stringified");
   console.log(body_string);
-  var body_JSON = JSON.stringify(body_string);
+  // body_string = body_string.replace(/u0026/g, "%26");
+  // body_string = body_string.replace(/\\/g, "");
+  body_string = body_string.replace("AWSAccessKeyId\":\"", "AWSAccessKeyId=");
+  console.log("Replaced");
+  console.log(body_string);
+  
+  var body_JSON = JSON.parse(body_string);
   console.log("Turned back to JSON 2 - status");
   console.log(body_JSON.status);
 
