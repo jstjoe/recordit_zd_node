@@ -127,11 +127,13 @@ app.post('/recordit/completed', function(req, res) {
   // if the status is 'ready'
   console.log("Raw data");
   console.log(req.body);
+  console.log(typeof req.body);
 
 
   var body_string = JSON.stringify(req.body);
   console.log("Stringified");
   console.log(body_string);
+  console.log(typeof body_string);
   // body_string = body_string.replace(/u0026/g, "%26");
   // body_string = body_string.replace(/\\/g, "");
   body_string = body_string.replace("AWSAccessKeyId\":\"", "AWSAccessKeyId=");
@@ -139,6 +141,7 @@ app.post('/recordit/completed', function(req, res) {
   body_string = body_string.replace(/"\}$/g, "");
   console.log("Replaced");
   console.log(body_string);
+  console.log(typeof body_string);
 
   var body_JSON = JSON.parse(body_string);
   console.log("Turned back to JSON 2 - status");
