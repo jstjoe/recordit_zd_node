@@ -98,7 +98,7 @@ app.get('/recordituri', function(req, res){
   var uri = urlBuilder.generate({
     fps : 12,
     encode : "gif",
-    action_url : "https://" + account + ".zendesk.com/tickets/" + ticket_id,
+    action_url : actionurl,
     callback : "http://zen-recordit.herokuapp.com/recordit/completed?ticket_id=" + ticket_id, // add dynamic parameters (account, user, ticket)
     start_message : "Record the problem please",
     end_message : "Problem recorded, updating ticket...",
@@ -165,8 +165,8 @@ app.post('/recordit/completed', function(req, res) {
       "app_id": 0,
       "event": "screencastDone",
       "body": {
-        "gifURL":"",
-        "videoURL":""
+        "gifURL":req.body.gifURL,
+        "recorditURL":req.body.recorditURL
       },
       "agent_id": 304417309
     };
