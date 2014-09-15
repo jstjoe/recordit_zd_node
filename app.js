@@ -173,7 +173,10 @@ app.post('/recordit/completed', function(req, res) {
     var options = {
       uri: 'https://itjoe.zendesk.com/api/v2/apps/notify.json',
       method: 'POST',
-      json: notification
+      json: notification,
+      auth: {
+        bearer: '6ad6642776b614c0d7aa76dd7aab4f0d3d44d4fa41fd1234c181380e43ebeaea'
+      }
     };
     request.post(options, function optionalCallback (err, httpResponse, body) {
       if (err) {
