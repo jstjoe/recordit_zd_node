@@ -135,9 +135,11 @@ app.post('/recordit/completed', function(req, res) {
   // body_string = body_string.replace(/u0026/g, "%26");
   // body_string = body_string.replace(/\\/g, "");
   body_string = body_string.replace("AWSAccessKeyId\":\"", "AWSAccessKeyId=");
+  body_string = body_string.replace(/^\{"/g, "");
+  body_string = body_string.replace(/"\}$/g, "");
   console.log("Replaced");
   console.log(body_string);
-  
+
   var body_JSON = JSON.parse(body_string);
   console.log("Turned back to JSON 2 - status");
   console.log(body_JSON.status);
