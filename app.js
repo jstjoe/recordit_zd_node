@@ -9,7 +9,7 @@ require('recordit-url-builder');
 var app = express();
 var passport = require('passport');
 var ZendeskStrategy = require('passport-zendesk').Strategy;
-var root = 'https://zen-recordit.herokuapp.com/login/callback'; // 'https://zen-recordit.herokuapp.com/login/callback' TODO this should be a session variable
+var root = 'https://zen-recordit.herokuapp.com'; // 'https://zen-recordit.herokuapp.com/login/callback' TODO this should be a session variable
 
 // configure express
 app.use(cookieParser());
