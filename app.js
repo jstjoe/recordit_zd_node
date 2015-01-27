@@ -9,6 +9,7 @@ require('recordit-url-builder');
 var app = express();
 var passport = require('passport');
 var ZendeskStrategy = require('passport-zendesk').Strategy;
+var root = 'http://localhost:3000'; // 'https://zen-recordit.herokuapp.com/login/callback' TODO this should be a session variable
 
 // configure express
 app.use(cookieParser());
@@ -22,7 +23,7 @@ passport.use(new ZendeskStrategy({
     subdomain: 'itjoe',
     clientID: 'recordit_integration',
     clientSecret: 'd9ba3d580b752fd4b9a8549fc7450f55fc36c025da3b7d15e14cd3c6e70522d2',
-    callbackURL: 'http://localhost:3000/login/callback'
+    callbackURL: root+ '/login/callback' 
   },
   function(accessToken, refreshToken, profile, done) {
     return done(null, profile, accessToken);
@@ -35,47 +36,62 @@ passport.deserializeUser(function(user, done) {
   done(null, user);
 });
 
-// configure recordit url builder
+// configure recordit url builder TODO: get this from a session variable for security
 var urlBuilder = new Recordit.URLBuilder({
-    clientID : "550769da0787b8fe768d084801bac17399913a8b",
-    secret : "b276bc51c25b26d411170cf8508e83fcdfaa572f"
+  clientID : "550769da0787b8fe768d084801bac17399913a8b",
+  secret : "b276bc51c25b26d411170cf8508e83fcdfaa572f"
 });
 
-// ROUTES
-app.get('/login', passport.authenticate('zendesk'));  // , { subdomain: subdomain }
+// #### ROUTES ####
+app.get('/login', passport.authenticate('zendesk'));  // pass subdomain as URL parameter e.g. ?subdomain=itjoe
 
 app.get('/login/callback', passport.authenticate('zendesk', { failureRedirect: '/login' }),
   function(req, res) {
     // successful authentication
     // create user & account, store token
-    // console.log(req.authInfo);
+    console.log(req.user);
+    var token = req.authInfo,
+        subdomain = 'itjoe';
 
+    var notification = {
+      "app_id": 0,
+      "event": "loginDone",
+      "body": {
+        "token": token
+      },
+      "agent_id": req.user.id
+    };
+    sendNotification(notification, subdomain, token);
+    res.send("all good");
     // redirect home
-    res.redirect('/success');
+    // res.redirect('/success');
   });
 
 // on recordit URI request
 app.get('/recordituri', function(req, res){
   // check 1. if account exists, 2. if user exists, 3. that user can auth into ticket
-  var user = req.query.user,
-    account = req.query.account,
-    ticket_id = req.query.ticket_id;
-    // check for user & account in DB, if found grab the token and then...
+  var user = {
+        email: req.query.user_email,
+        id: req.query.user_id
+      },
+      ticket_id = req.query.ticket_id,
+      subdomain = req.query.subdomain,
+      token = req.query.token;
 
 
   var client = zendesk.createClient({
-    username:  'joe+it@zendesk.com',
-    token:     '6ad6642776b614c0d7aa76dd7aab4f0d3d44d4fa41fd1234c181380e43ebeaea',
-    remoteUri: 'https://itjoe.zendesk.com/api/v2',
-    oauth: true
+      username:  user.email,
+      token:     token,
+      remoteUri: 'https://' + subdomain + '.zendesk.com/api/v2',
+      oauth: true
   });
     // check that the user is authenticated
   client.users.auth(function (err, authRequest, result) {
     if (err) {
       console.log(err);
       // TODO: send the correct response code?
-      res.redirect('/login');
-      return;
+      res.redirect('/login?subdomain=' + subdomain); // TODO probably need to do this redirect in the client app given a JSON response
+      return; // shut it down
     }
     // console.log(JSON.stringify(result.verified));
 
@@ -83,7 +99,6 @@ app.get('/recordituri', function(req, res){
     console.log('User authenticated into Zendesk');
 
     var role = req.query.role,
-      user_id = req.query.user_id,
       uri;
 
     if (role == 'agent') {
@@ -91,7 +106,7 @@ app.get('/recordituri', function(req, res){
       uri = urlBuilder.generate({
         fps : 12,
         encode : "all",
-        callback : "http://zen-recordit.herokuapp.com/recordit/completed?ticket_id=" + ticket_id + "&role=agent", // add dynamic parameters (account, user, ticket)
+        callback : root+ "/recordit/completed?ticket_id=" +ticket_id+ "&subdomain=" +subdomain+ "user_id=" +user.id+ "&role=agent&token=" + token, // add dynamic parameters (account, user, ticket)
         start_message : "Let's get it started",
         end_message : "Sending to Zendesk, recording should be available shortly"
       });
@@ -99,10 +114,10 @@ app.get('/recordituri', function(req, res){
       uri = urlBuilder.generate({
         fps : 12,
         encode : "all",
-        callback : "http://zen-recordit.herokuapp.com/recordit/completed?ticket_id=" + ticket_id, // add dynamic parameters (account, user, ticket)
+        callback : root+ "/recordit/completed?ticket_id=" + ticket_id, // add dynamic parameters (account, user, ticket)
         start_message : "Please record the problem",
         end_message : "Sending to Zendesk, recording should be available shortly"
-        // action_url : "https://" + account + ".zendesk.com/agent/#/tickets/" + ticket_id
+        // action_url : "https://" + subdomain + ".zendesk.com/agent/#/tickets/" + ticket_id
         // fps : fps,
         // encode : encode,
         // action_url : action_url,
@@ -134,18 +149,26 @@ app.post('/recordit/completed', function(req, res) {
     console.dir(req.body);
 
     // grab the details, fetch the GIF, upload it, and update the ticket
-    var user = req.query.user,
-      account = req.query.account,
-      ticket_id = req.query.ticket_id || '10';
+    var user = {
+      email: req.query.user,
+      id: req.query.user_id
+    },
+    ticket_id = req.query.ticket_id || '10',
+    subdomain = req.query.subdomain,
+    token = req.query.token;
+
 
     var client = zendesk.createClient({
-      token:     '6ad6642776b614c0d7aa76dd7aab4f0d3d44d4fa41fd1234c181380e43ebeaea',
-      remoteUri: 'https://itjoe.zendesk.com/api/v2',
+      token:     token,
+      remoteUri: 'https://' +subdomain+ '.zendesk.com/api/v2',
       oauth: true
     });
 
-    // TODO: upload the file, grab the uploads token
-    // client.attachments.upload(req.body.gifURL, null, function(err, req, result) {
+    // TODO: grab the file, upload the file, grab the uploads token
+
+
+
+    // client.attachments.upload( theImage , null, function(err, req, result) {
     //   if (err) {
     //     console.log(err);
     //     return;
@@ -166,6 +189,8 @@ app.post('/recordit/completed', function(req, res) {
     // });
 
     // ELSE if role is agent -> send them the screenshot via app notifications
+
+
     var notification = {
       "app_id": 0,
       "event": "screencastDone",
@@ -174,27 +199,28 @@ app.post('/recordit/completed', function(req, res) {
         "gifURL": req.body.gifURL,
         "recorditURL": req.body.recorditURL
       },
-      "agent_id": 304417309
+      "agent_id": user.id
     };
-    var options = {
-      uri: 'https://itjoe.zendesk.com/api/v2/apps/notify.json',
-      method: 'POST',
-      json: notification,
-      auth: {
-        bearer: '6ad6642776b614c0d7aa76dd7aab4f0d3d44d4fa41fd1234c181380e43ebeaea'
-      }
-    };
-    request.post(options, function optionalCallback (err, httpResponse, body) {
-      if (err) {
-        return console.error('Upload failed:', err);
-      }
-      res.send("all good");
-      console.log('POST to notifications successful!  Server responded with:', body);
-    });
+    sendNotification(notification, subdomain, token);
+    res.send("all good");
+    // NOTE this was abstracted to 'sendNotification'
+    // var options = {
+    //   uri: 'https://' +subdomain+ '.zendesk.com/api/v2/apps/notify.json',
+    //   method: 'POST',
+    //   json: notification,
+    //   auth: {bearer: token}
+    // };
+    // request.post(options, function optionalCallback (err, httpResponse, body) {
+    //   if (err) {
+    //     return console.error('Notifications POST failed:', err);
+    //   }
+    //   res.send("all good");
+    //   console.log('POST to notifications successful!  Server responded with:', body);
+    // });
 
   } else {
     // status is not ready
-    res.send("all good");
+    res.send("all good, image isn't ready yet");
     console.dir(req.body);
   }
   
@@ -202,8 +228,25 @@ app.post('/recordit/completed', function(req, res) {
 
 // named functions
 function handleError(err) {
-    console.log(err);
-    process.exit(-1);
+  console.log(err);
+  process.exit(-1);
+}
+
+function sendNotification(notification, subdomain, token) {
+  var options = {
+    uri: 'https://' +subdomain+ '.zendesk.com/api/v2/apps/notify.json',
+    method: 'POST',
+    json: notification,
+    auth: {bearer: token}
+  };
+  request.post(options, function optionalCallback (err, httpResponse, body) {
+    if (err) {
+      return console.error('Notifications POST failed:', err);
+    }
+    console.log('POST to notifications successful!');
+    console.log(notification);
+
+  });
 }
 
 // START
