@@ -9,7 +9,7 @@ require('recordit-url-builder');
 var app = express();
 var passport = require('passport');
 var ZendeskStrategy = require('passport-zendesk').Strategy;
-var root = 'https://zen-recordit.herokuapp.com'; // 'https://zen-recordit.herokuapp.com/login/callback' TODO this should be a session variable
+var root = 'http://localhost:3000'; // 'https://zen-recordit.herokuapp.com/login/callback' TODO this should be a session variable
 
 // configure express
 app.use(cookieParser());
@@ -106,7 +106,7 @@ app.get('/recordituri', function(req, res){
       uri = urlBuilder.generate({
         fps : 12,
         encode : "all",
-        callback : "http://localhost:3000/recordit/completed?ticket_id=" +ticket_id+ "&subdomain=" +subdomain+ "user_id=" +user.id+ "&role=agent&token=" + token, // add dynamic parameters (account, user, ticket)
+        callback : root+ "/recordit/completed?ticket_id=" +ticket_id+ "&subdomain=" +subdomain+ "user_id=" +user.id+ "&role=agent&token=" + token, // add dynamic parameters (account, user, ticket)
         start_message : "Let's get it started",
         end_message : "Sending to Zendesk, recording should be available shortly"
       });
