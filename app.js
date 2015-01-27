@@ -9,7 +9,7 @@ require('recordit-url-builder');
 var app = express();
 var passport = require('passport');
 var ZendeskStrategy = require('passport-zendesk').Strategy;
-var root = 'http://localhost:3000'; // 'https://zen-recordit.herokuapp.com/login/callback' TODO this should be a session variable
+var root = 'https://zen-recordit.herokuapp.com/login/callback'; // 'https://zen-recordit.herokuapp.com/login/callback' TODO this should be a session variable
 
 // configure express
 app.use(cookieParser());
@@ -23,7 +23,7 @@ passport.use(new ZendeskStrategy({
     subdomain: 'itjoe',
     clientID: 'recordit_integration',
     clientSecret: 'd9ba3d580b752fd4b9a8549fc7450f55fc36c025da3b7d15e14cd3c6e70522d2',
-    callbackURL: root+ '/login/callback' 
+    callbackURL: root+ '/login/callback'
   },
   function(accessToken, refreshToken, profile, done) {
     return done(null, profile, accessToken);
@@ -85,7 +85,7 @@ app.get('/recordituri', function(req, res){
       remoteUri: 'https://' + subdomain + '.zendesk.com/api/v2',
       oauth: true
   });
-    // check that the user is authenticated
+    // check that the token is valid
   client.users.auth(function (err, authRequest, result) {
     if (err) {
       console.log(err);
@@ -201,22 +201,22 @@ app.post('/recordit/completed', function(req, res) {
       },
       "agent_id": user.id
     };
-    sendNotification(notification, subdomain, token);
-    res.send("all good");
+    // sendNotification(notification, subdomain, token);
+    // res.send("all good");
     // NOTE this was abstracted to 'sendNotification'
-    // var options = {
-    //   uri: 'https://' +subdomain+ '.zendesk.com/api/v2/apps/notify.json',
-    //   method: 'POST',
-    //   json: notification,
-    //   auth: {bearer: token}
-    // };
-    // request.post(options, function optionalCallback (err, httpResponse, body) {
-    //   if (err) {
-    //     return console.error('Notifications POST failed:', err);
-    //   }
-    //   res.send("all good");
-    //   console.log('POST to notifications successful!  Server responded with:', body);
-    // });
+    var options = {
+      uri: 'https://' +subdomain+ '.zendesk.com/api/v2/apps/notify.json',
+      method: 'POST',
+      json: notification,
+      auth: {bearer: token}
+    };
+    request.post(options, function optionalCallback (err, httpResponse, body) {
+      if (err) {
+        return console.error('Notifications POST failed:', err);
+      }
+      res.send("all good");
+      console.log('POST to notifications successful!  Server responded with:', body);
+    });
 
   } else {
     // status is not ready
