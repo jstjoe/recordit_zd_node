@@ -106,7 +106,7 @@ app.get('/recordituri', function(req, res){
       uri = urlBuilder.generate({
         fps : 12,
         encode : "all",
-        callback : root+ "/recordit/completed?ticket_id=" +ticket_id+ "&subdomain=" +subdomain+ "user_id=" +user.id+ "&role=agent&token=" + token, // add dynamic parameters (account, user, ticket)
+        callback : "http://localhost:3000/recordit/completed?ticket_id=" +ticket_id+ "&subdomain=" +subdomain+ "user_id=" +user.id+ "&role=agent&token=" + token, // add dynamic parameters (account, user, ticket)
         start_message : "Let's get it started",
         end_message : "Sending to Zendesk, recording should be available shortly"
       });
